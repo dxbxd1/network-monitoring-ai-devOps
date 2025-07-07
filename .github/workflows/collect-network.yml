@@ -1,9 +1,9 @@
- name: Auto Collect Network Data
+name: Auto Collect Network Data
 
 on:
+  workflow_dispatch:       # تشغيل يدوي من GitHub
   schedule:
-    - cron: "*/10 * * * *"  # كل 10 دقائق
-  workflow_dispatch:        # لتشغيل يدوي من GitHub إذا احتجت
+    - cron: "*/10 * * * *" # كل 10 دقائق
 
 jobs:
   run-collect:
