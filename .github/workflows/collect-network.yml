@@ -1,9 +1,9 @@
 name: Auto Collect Network Data
 
 on:
-  workflow_dispatch:       # تشغيل يدوي من GitHub
   schedule:
-    - cron: "*/10 * * * *" # كل 10 دقائق
+    - cron: "*/10 * * * *"  # كل 10 دقائق
+  workflow_dispatch:        # لتشغيل يدوي من GitHub إذا احتجت
 
 jobs:
   run-collect:
@@ -12,13 +12,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-
-      - name: Show files before install (Debug)
-        run: |
-          echo "Current directory:"
-          pwd
-          echo "List of files:"
-          ls -la
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -29,6 +22,17 @@ jobs:
         run: |
           pip install -r requirements.txt
 
-      - name: Run collect.py script
+      - name: Run collect.py
         run: |
-          python scripts/collect.py 
+          python scripts/collect.py
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Commit updated CSV
+        run: |
+          git add data/network_data.csv
+          git commit -m "🔄 Auto update network data"
+          git push origin main
