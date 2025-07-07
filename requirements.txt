@@ -2,4 +2,3 @@ pandas
 pingparsing
 speedtest-cli
 psutil
-pingpar
