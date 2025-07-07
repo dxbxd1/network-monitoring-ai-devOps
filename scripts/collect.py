@@ -1,3 +1,4 @@
+import os
 import time
 import pandas as pd
 from pingparsing import PingParsing, PingTransmitter
@@ -15,7 +16,7 @@ ping_transmitter = PingTransmitter()
 ping_transmitter.destination = target
 ping_transmitter.count = 4
 
-# بيانات التليجرام - عبيهم بقيمك
+# بيانات التليجرام - غير القيم إلى قيمك الخاصة
 TELEGRAM_BOT_TOKEN = "7267450606:AAFQkWL0_lDXSWCDWGqF9zHkvWDyiyLNXZE"
 TELEGRAM_CHAT_ID = 658534156
 
@@ -29,9 +30,9 @@ def send_telegram_message(message):
     try:
         response = requests.post(url, data=payload)
         if response.status_code != 200:
-            print(f"Failed to send message: {response.text}")
+            print(f"❌ Failed to send message: {response.text}")
     except Exception as e:
-        print(f"Exception during Telegram send: {e}")
+        print(f"❌ Exception during Telegram send: {e}")
 
 def get_network_data():
     # بيانات البينق
@@ -58,10 +59,10 @@ def get_network_data():
         "bytes_recv": net_io.bytes_recv
     }
 
-    # شرط التنبيه: يرسل دائماً للتجربة
-    if data["packet_loss"] >= 0 or data["jitter_ms"] >= 20:
+    # شرط التنبيه
+    if data["packet_loss"] > 0 or data["jitter_ms"] >= 20:
         alert_msg = (
-            f"🚨 تنبيه شبكة (اختبار)!\n"
+            f"🚨 تنبيه شبكة!\n"
             f"🕒 الوقت: {data['timestamp']}\n"
             f"⏱ RTT متوسط: {data['rtt_avg_ms']} ms\n"
             f"📉 فقد الحزم: {round(data['packet_loss'] * 100, 2)}%\n"
@@ -73,8 +74,7 @@ def get_network_data():
 
     return data
 
-# التجميع وحفظ البيانات
-def collect_loop(interval=1, duration=2):  # فترة قصيرة للتجربة
+def collect_loop(interval=1, duration=2):  # فاصل زمني للتجربة
     df = pd.DataFrame()
     for _ in range(duration):
         try:
@@ -82,12 +82,22 @@ def collect_loop(interval=1, duration=2):  # فترة قصيرة للتجربة
             df = pd.concat([df, pd.DataFrame([data])], ignore_index=True)
             print("✅ Data collected:", data)
         except Exception as e:
-            print("❌ Error:", e)
+            print("❌ Error during data collection:", e)
         time.sleep(interval)
 
-    df.to_csv("data/network_data.csv", index=False)
-    print("📁 Saved to data/network_data.csv")
+    # إنشاء مجلد data إذا لم يكن موجود
+    os.makedirs("data", exist_ok=True)
 
-# التصحيح هنا
-if __name__ == "__main__":
-    collect_loop()
+    file_path = "data/network_data.csv"
+    
+    # إذا الملف موجود، نقرأ البيانات السابقة
+    if os.path.exists(file_path):
+        old_df = pd.read_csv(file_path)
+        df = pd.concat([old_df, df], ignore_index=True)
+
+    # حفظ البيانات الجديدة مع القديمة
+    df.to_csv(file_path, index=False)
+    print("📁 Appended and saved to data/network_data.csv")
+
+if _name_ == "_main_":
+    collect_loop()
