@@ -35,4 +35,4 @@ jobs:
         run: |
           git add data/network_data.csv
           git commit -m "🔄 Auto update network data"
-          git push origin main
+          git push origin master
