@@ -1,0 +1,27 @@
+name: Auto Collect Network Data
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"  # كل 10 دقائق
+  workflow_dispatch:        # لتشغيل يدوي من GitHub إذا احتجت
+
+jobs:
+  run-collect:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run collect.py
+        run: |
+          python scripts/collect.py 
