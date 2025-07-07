@@ -99,5 +99,5 @@ def collect_loop(interval=1, duration=2):  # فاصل زمني للتجربة
     df.to_csv(file_path, index=False)
     print("📁 Appended and saved to data/network_data.csv")
 
-if _name_ == "_main_":
+if __name__ == "__main__":
     collect_loop()
