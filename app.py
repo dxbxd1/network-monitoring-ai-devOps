@@ -9,7 +9,7 @@ st.set_page_config(
     layout="wide"
 )
 
-# ✅ تخصيص CSS: خلفية بنفسجية + خط Tajawal + خط أبيض
+# ✅ CSS شامل (خلفية + خط + أزرار + ألوان STC)
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap');
@@ -54,17 +54,32 @@ st.markdown("""
         color: #ffffff !important;
     }
 
+    /* ✅ درون متحرك */
+    .drone-fly {
+        position: relative;
+        width: 150px;
+        animation: fly 4s ease-in-out infinite alternate;
+        margin: 0 auto;
+        display: block;
+    }
+
+    @keyframes fly {
+        0%   { transform: translateY(0px) rotate(-2deg); }
+        100% { transform: translateY(30px) rotate(2deg); }
+    }
     </style>
+
+    <img class="drone-fly" src="https://i.ibb.co/NF3ShpL/drone.png" alt="Drone Flying"/>
 """, unsafe_allow_html=True)
 
 # ✅ العبارة الترحيبية
-st.markdown("<h1 style='color:#e0c3fc;'>Welcome to Eng Mojtaba Badawi Project 🚀</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align:center;'>Welcome to Eng Mojtaba Badawi Project 🚀</h1>", unsafe_allow_html=True)
 st.markdown("---")
 
 # ✅ عنوان التطبيق
 st.title("🌐 مراقبة أداء الشبكة - AI Network Monitoring")
 
-# ✅ البيانات
+# ✅ تحميل البيانات
 DATA_PATH = "data/network_data.csv"
 
 if os.path.exists(DATA_PATH):
