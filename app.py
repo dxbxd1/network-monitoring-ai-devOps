@@ -2,11 +2,69 @@ import streamlit as st
 import pandas as pd
 import os
 
-# إعدادات الصفحة
-st.set_page_config(page_title="Network Monitor", page_icon="🌐", layout="wide")
+# إعداد الصفحة (يجب أن يكون أول أمر)
+st.set_page_config(
+    page_title="Network Monitoring - STC Theme",
+    page_icon="🌐",
+    layout="wide"
+)
+
+# ✅ تخصيص CSS: خلفية بنفسجية + خط Tajawal + خط أبيض
+st.markdown("""
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap');
+
+    html, body, [class*="css"] {
+        font-family: 'Tajawal', sans-serif;
+        background-color: #2c004d;
+        color: #ffffff;
+    }
+
+    .stApp {
+        background-color: #2c004d;
+        color: #ffffff;
+    }
+
+    h1, h2, h3 {
+        font-family: 'Tajawal', sans-serif;
+        color: #e0c3fc;
+    }
+
+    .stButton>button {
+        background-color: #500778;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 0.5em 1em;
+        font-weight: bold;
+    }
+
+    .stButton>button:hover {
+        background-color: #b10074;
+        color: white;
+    }
+
+    .stAlert {
+        border-left: 6px solid #b10074;
+        background-color: #3a005e;
+        color: #ffffff;
+    }
+
+    .stDataFrame table {
+        color: #ffffff !important;
+    }
+
+    </style>
+""", unsafe_allow_html=True)
+
+# ✅ العبارة الترحيبية
+st.markdown("<h1 style='color:#e0c3fc;'>Welcome to Eng Mojtaba Badawi Project 🚀</h1>", unsafe_allow_html=True)
+st.markdown("---")
+
+# ✅ عنوان التطبيق
 st.title("🌐 مراقبة أداء الشبكة - AI Network Monitoring")
 
-# مسار البيانات
+# ✅ البيانات
 DATA_PATH = "data/network_data.csv"
 
 if os.path.exists(DATA_PATH):
@@ -15,10 +73,9 @@ if os.path.exists(DATA_PATH):
     st.subheader("📊 آخر 5 قراءات:")
     st.dataframe(df.tail(5), use_container_width=True)
 
-    # ----------- مؤشرات الأداء -----------
     st.subheader("⚙ المؤشرات الحالية:")
-
     last = df.iloc[-1]
+
     col1, col2, col3 = st.columns(3)
     col1.metric("RTT Avg (ms)", round(last["rtt_avg_ms"], 2))
     col2.metric("Download (Mbps)", last["download_mbps"])
@@ -28,7 +85,6 @@ if os.path.exists(DATA_PATH):
     col4.metric("Jitter (ms)", last["jitter_ms"])
     col5.metric("Packet Loss (%)", round(last["packet_loss"] * 100, 2))
 
-    # ----------- تنبيهات داخلية -----------
     st.subheader("🚨 تنبيهات الشبكة:")
 
     if last["packet_loss"] > 0:
@@ -38,9 +94,7 @@ if os.path.exists(DATA_PATH):
     else:
         st.success("✅ أداء الشبكة مستقر حتى الآن.")
 
-    # ----------- رسم مخططات -----------
     st.subheader("📈 تغير الأداء بمرور الوقت:")
-
     with st.expander("عرض الرسوم البيانية"):
         chart_cols = st.columns(2)
         with chart_cols[0]:
