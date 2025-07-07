@@ -1,4 +1,4 @@
-name: Auto Collect Network Data
+ name: Auto Collect Network Data
 
 on:
   schedule:
@@ -13,6 +13,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Show files before install (Debug)
+        run: |
+          echo "Current directory:"
+          pwd
+          echo "List of files:"
+          ls -la
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -22,6 +29,6 @@ jobs:
         run: |
           pip install -r requirements.txt
 
-      - name: Run collect.py
+      - name: Run collect.py script
         run: |
           python scripts/collect.py 
