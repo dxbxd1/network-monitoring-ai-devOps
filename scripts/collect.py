@@ -100,4 +100,4 @@ def collect_loop(interval=1, duration=2):  # فاصل زمني للتجربة
     print("📁 Appended and saved to data/network_data.csv")
 
 if __name__ == "__main__":
-    collect_loop()
+    collect_loop()
